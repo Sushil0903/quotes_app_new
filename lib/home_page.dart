@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:quotes_app/models/db_helper.dart';
 import 'package:quotes_app/models/quotes_model.dart';
+import 'package:share_extend/share_extend.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,9 +17,25 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.black54,
-          title: Text("Quots App"),
+          backgroundColor: Colors.black87,
+          title: Text(
+            "Quots App",
+            style: TextStyle(color: Colors.white),
+          ),
           centerTitle: true,
+          actions: [
+            InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, "liked_page");
+                },
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Icon(
+                    Icons.favorite,
+                    color: Colors.white,
+                  ),
+                ))
+          ],
         ),
         body: Stack(
           children: [
@@ -81,20 +99,39 @@ class _HomePageState extends State<HomePage> {
                                 const SizedBox(
                                   height: 10,
                                 ),
-                                const Row(
+                                Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(
-                                      Icons.favorite,
-                                      size: 28,
+                                    InkWell(
+                                      onTap: () async {
+                                        var insertint = await DbHelper.dbHelper
+                                            .InsertlikedQuotes(
+                                                q: model[index].q ?? "empty q",
+                                                a: model[index].q ?? "empty a");
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                content:
+                                                    Text("Add to Liked list")));
+                                      },
+                                      child: const Icon(
+                                        Icons.favorite,
+                                        size: 28,
+                                      ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 50,
                                     ),
-                                    Icon(
-                                      Icons.share,
-                                      size: 28,
-                                      color: Colors.black54,
+                                    InkWell(
+                                      onTap: () {
+                                        ShareExtend.share(
+                                            "${model[index].q}", "text",
+                                            sharePanelTitle: "Quote");
+                                      },
+                                      child: const Icon(
+                                        Icons.share,
+                                        size: 28,
+                                        color: Colors.black54,
+                                      ),
                                     )
                                   ],
                                 )

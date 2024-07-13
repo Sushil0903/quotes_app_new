@@ -22,6 +22,12 @@ class QuotesModel {
     this.c,
     this.h,
   });
+  factory QuotesModel.fromMap({required Map<String, dynamic> data}) {
+    return QuotesModel(
+      q: data["quote"],
+      a: data["author"],
+    );
+  }
 
   factory QuotesModel.fromJson(Map<String, dynamic> json) => QuotesModel(
         q: json["q"],
