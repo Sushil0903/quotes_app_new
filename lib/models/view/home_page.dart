@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:provider/provider.dart';
+import 'package:quotes_app/controller/main_provider.dart';
 import 'package:quotes_app/models/db_helper.dart';
 import 'package:quotes_app/models/quotes_model.dart';
 import 'package:share_extend/share_extend.dart';
@@ -55,6 +57,8 @@ class _HomePageState extends State<HomePage> {
                 Response? res = snapshot.data;
                 if (res != null) {
                   List<QuotesModel> model = quotesModelFromJson(res.body);
+                  Provider.of<MainProvider>(context, listen: true).DModel =
+                      model;
                   return ListView.builder(
                     itemCount: model.length,
                     itemBuilder: (context, index) {
